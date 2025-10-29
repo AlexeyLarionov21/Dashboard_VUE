@@ -3,6 +3,12 @@
   height: 68px;
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: #ff8a00;
+}
+
+.item:hover {
+  color: #b15e00;
 }
 
 .row {
@@ -27,6 +33,7 @@
   align-items: center;
   margin: 10px 12px 10px 14px;
   column-gap: 6px;
+  color: inherit;
 }
 
 .iconContainer {
@@ -36,6 +43,7 @@
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+  color: inherit;
 }
 
 .iconWrap {
@@ -48,26 +56,31 @@
   border-radius: 8px;
   margin: 0;
   transition: background 0.2s ease;
+  color: inherit;
 
   &.collapsed {
     background: rgba(255, 247, 218, 0.7);
   }
 }
 
-.icon {
-  display: inline-flex;
+.iconMask {
   width: 16px;
   height: 16px;
-  color: #ff8a00;
+  display: inline-block;
+  flex: 0 0 16px;
+
+  background-color: currentColor; /* цвет иконки */
+  -webkit-mask: var(--icon-url) no-repeat center;
+  mask: var(--icon-url) no-repeat center;
+  -webkit-mask-size: contain; /* КЛЮЧЕВОЕ */
+  mask-size: contain;
 }
 
 .label {
   line-height: 1;
   font-size: 20px;
-  color: #ff8a00;
+  color: inherit;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-// удалён вложенный селектор .collapsed .iconWrap, так как классы вешаются на один элемент

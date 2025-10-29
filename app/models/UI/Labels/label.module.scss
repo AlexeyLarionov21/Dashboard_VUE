@@ -1,0 +1,28 @@
+.label {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 4px 8px;
+  justify-content: center;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+}
+
+.active {
+  color: #30b25d;
+  background: #ebffed;
+}
+
+.closed {
+  color: #818181;
+  background: #e0e0e0;
+}
+
+.canceled {
+  color: #b23030;
+  background: #ffebeb;
+}

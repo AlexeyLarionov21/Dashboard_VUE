@@ -1,15 +1,11 @@
 <template>
-  <div :class="$style.item">
+  <NuxtLink :to="to" :class="$style.item" aria-label="Перейти в раздел">
     <div :class="$style.row">
       <span :class="$style.bar" aria-hidden="true"></span>
       <div :class="$style.content">
         <div :class="[$style.iconWrap, collapsed && $style.collapsed]">
           <div :class="$style.iconContainer">
-            <span :class="$style.icon">
-              <slot name="icon"
-                ><img v-if="icon" :src="icon" :alt="label"
-              /></slot>
-            </span>
+            <img :src="icon" :alt="label" :class="$style.icon" />
           </div>
         </div>
         <span :class="$style.label" v-if="!collapsed">{{
@@ -19,7 +15,7 @@
       <!-- контейнер -->
     </div>
     <!-- Ячейка -->
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +23,7 @@ import { inject, ref, type Ref } from "vue";
 
 interface Props {
   label: string;
+  to: string;
   icon?: string;
 }
 defineProps<Props>();

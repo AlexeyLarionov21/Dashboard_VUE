@@ -1,8 +1,13 @@
 <template>
   <section :class="$style.content">
-    <h1>Заявки</h1>
-    <!-- таблица-->
+    <Header />
+    <TableContainer />
   </section>
 </template>
 
-<style module lang="scss" src="./Content.module.scss"></style>
+<style module lang="scss" src="./Content.module.scss" />
+
+<script setup lang="ts">
+import Header from "./Header/Header.vue";
+import TableContainer from "./TableContainer/TableContainer.vue";
+</script>
