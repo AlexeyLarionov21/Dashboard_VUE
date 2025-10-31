@@ -1,0 +1,14 @@
+.btnSave {
+  width: 140px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  background: linear-gradient(135deg, #fc8507, #ffa218);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.btnSave:hover {
+  background: linear-gradient(135deg, #f08009, #e7900d);
+}

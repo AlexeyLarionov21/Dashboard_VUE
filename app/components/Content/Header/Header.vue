@@ -1,7 +1,7 @@
 <template>
   <section :class="$style.header">
     <div :class="$style.container">
-      <h2 :class="$style.label">{{ currentTitle }}</h2>
+      <h2 :class="$style.label">{{ currentTitle || "$currentTitle" }}</h2>
     </div>
   </section>
 </template>

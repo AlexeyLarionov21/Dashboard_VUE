@@ -1,7 +1,12 @@
 <template>
   <section :class="$style.content">
     <Header />
-    <TableContainer />
+    <div v-if="$slots.actions">
+      <slot name="actions" />
+    </div>
+    <div :class="$style.body">
+      <slot />
+    </div>
   </section>
 </template>
 
@@ -9,5 +14,4 @@
 
 <script setup lang="ts">
 import Header from "./Header/Header.vue";
-import TableContainer from "./TableContainer/TableContainer.vue";
 </script>

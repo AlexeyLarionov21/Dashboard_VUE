@@ -1,10 +1,8 @@
-<script setup lang="ts">
-import Table from "./Table/Table.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div :class="$style.tableContainer">
-    <Table />
+    <slot />
   </div>
 </template>
 
