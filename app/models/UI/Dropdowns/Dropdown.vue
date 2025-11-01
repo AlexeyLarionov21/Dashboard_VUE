@@ -7,7 +7,7 @@
       aria-haspopup="listbox"
       :aria-expanded="isOpen"
     >
-      <span>{{ selectedItem || "Select" }}</span>
+      <span>{{ selectedItemDisplay }}</span>
       <svg
         :class="isOpen ? [$style.chevron, $style.rotated] : $style.chevron"
         width="16"
@@ -28,9 +28,9 @@
         v-for="(item, index) in items"
         :key="index"
         role="option"
-        :aria-selected="item === selectedItem"
+        :aria-selected="item.id === selectedItem"
         :class="
-          item === selectedItem
+          item.id === selectedItem
             ? [$style['option'], $style['is-selected']]
             : $style.option
         "
@@ -42,7 +42,7 @@
         <span :class="$style['option-content']">
           {{ item }}
           <svg
-            v-if="item === selectedItem"
+            v-if="item.id === selectedItem"
             :class="$style.checkmark"
             width="16"
             height="16"
@@ -65,9 +65,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import type { Color } from "~~/types/colors";
 
 interface Props {
-  items: string[];
+  items: Color[];
   currentItem?: string;
 }
 
@@ -93,6 +94,11 @@ watch(
 );
 ////
 
+const selectedItemDisplay = computed(() => {
+  const found = props.items.find((item) => item.id === localItem.value);
+  return found ? found.name : "Select";
+});
+
 const selectedItem = computed(() => localItem.value);
 
 const toggleDropdown = () => {
@@ -103,10 +109,10 @@ const closeDropdown = () => {
   isOpen.value = false;
 };
 
-const selectItem = (item: string) => {
-  localItem.value = item;
-  emit("inputEvent", item);
-  emit("changeItem", item);
+const selectItem = (item: Color) => {
+  localItem.value = item.id;
+  emit("inputEvent", item.id);
+  emit("changeItem", item.id);
   closeDropdown(); //
 };
 ///

@@ -37,8 +37,8 @@ const props = defineProps({
   },
   type: {
     type: String,
-    validator: (value: string) => ["integer", "decimal"].includes(value),
-    default: "integer",
+    validator: (value: string) => ["count", "price"].includes(value),
+    default: "count",
   },
 });
 
@@ -53,7 +53,7 @@ const displayValue = computed(() => {
 });
 ///
 const placeholder = computed(() => {
-  return props.type === "integer" ? "0" : "0.00";
+  return props.type === "count" ? "0" : "0.00";
 });
 ///
 
@@ -62,7 +62,7 @@ const validateInput = (value: string) => {
 
   const decimalRegex = /^\d*\.?\d{0,2}$/;
 
-  if (props.type === "integer") {
+  if (props.type === "count") {
     const integerRegex = /^\d+$/;
     if (integerRegex.test(value)) {
       return { isValid: true, value };
@@ -72,7 +72,7 @@ const validateInput = (value: string) => {
     return { isValid: !hasDecimal && decimalRegex.test(value), value };
   }
 
-  if (props.type === "decimal") {
+  if (props.type === "price") {
     return { isValid: decimalRegex.test(value), value };
   }
 

@@ -1,7 +1,8 @@
 import { ref, computed, watch } from "vue";
+import type { Color } from "~~/types/colors";
 
 interface Props {
-  items: string[];
+  items: Color[];
   value?: string;
 }
 
@@ -17,7 +18,6 @@ const emit = defineEmits<{
 const isOpen = ref(false);
 const localValue = ref(props.value); // Локальное состояние
 
-// Следим за изменением пропса value
 watch(
   () => props.value,
   (newVal) => {
@@ -42,7 +42,6 @@ const selectItem = (item: string) => {
   closeDropdown();
 };
 
-// Директива остается той же
 const vClickOutside = {
   mounted(el: HTMLElement, binding: any) {
     const clickHandler = (event: Event) => {

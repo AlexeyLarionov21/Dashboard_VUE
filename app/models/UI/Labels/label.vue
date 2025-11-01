@@ -5,11 +5,12 @@
 </template>
 
 <script setup lang="ts">
-type Variant = "active" | "closed" | "canceled";
+import type { ApplicationStatus } from "../../../../types/api";
+
+type Variant = ApplicationStatus;
+
 const textMap: Record<Variant, string> = {
-  active: "Активна",
-  closed: "Закрыта",
-  canceled: "Отменена",
+  draft: "Активна",
 };
 
 const props = withDefaults(
@@ -17,7 +18,7 @@ const props = withDefaults(
     variant?: Variant;
   }>(),
   {
-    variant: "active",
+    variant: "draft",
   }
 );
 </script>

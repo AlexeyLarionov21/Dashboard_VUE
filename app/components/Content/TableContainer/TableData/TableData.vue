@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { dataColor } from "~/composables/data";
+import { dataColor } from "~~/types/colors";
 import Dropdown from "~/models/UI/Dropdowns/Dropdown.vue";
 import Input from "~/models/UI/Inputs/Input.vue";
 import { ref } from "vue";
 
 const selectedColor = ref(dataColor[0] || "");
-const integerValue = ref("");
-const decimalValue = ref("");
+const count = ref("");
+const price = ref("");
+
+interface Props {
+  products: any[];
+}
 </script>
 
 <template>
@@ -22,8 +26,8 @@ const decimalValue = ref("");
     <tbody>
       <tr>
         <td>iPhone 16 Pro Max 256</td>
-        <td><Input v-model="integerValue" type="integer" /></td>
-        <td><Input v-model="decimalValue" type="decimal" /></td>
+        <td><Input v-model="count" type="count" /></td>
+        <td><Input v-model="price" type="price" /></td>
         <td>
           <client-only>
             <Dropdown :items="dataColor" v-model="selectedColor" />

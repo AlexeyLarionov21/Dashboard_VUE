@@ -10,47 +10,30 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>25-135443</td>
-        <td><Label variant="closed" /></td>
-        <td :class="local.tdResult">В обработке</td>
-        <td>Aug 16, 2025</td>
-        <td>
-          <Button
-            label="Отправить"
-            :isSend="true"
-            :onClick="() => console.log('click')"
-          />
+      <tr v-if="pending">
+        <td colspan="5">
+          <h3>Загрузка..</h3>
         </td>
       </tr>
-      <tr>
-        <td>25-135443</td>
-        <td><Label variant="canceled" /></td>
-        <td :class="local.tdResult">В обработке</td>
-        <td>Aug 16, 2025</td>
-        <td>
-          <Button
-            label="Редактировать"
-            :isSend="false"
-            :onClick="() => console.log('click')"
-          />
-        </td>
-      </tr>
-
-      <tr>
-        <td>25-135443</td>
-        <td><Label variant="active" /></td>
-        <!-- <td><span :class="$style.statusActive">Активна</span></td> -->
-        <td :class="local.tdResult">В обработке</td>
-        <td>Aug 11, 2025</td>
-        <td>
-          <Button
-            label="Редактировать"
-            :isSend="false"
-            :onClick="() => console.log('click')"
-          />
-        </td>
-      </tr>
+      <template v-else>
+        <client-only>
+          <tr v-for="app in applications" :key="app.id">
+            <td>{{ app.id }}</td>
+            <td><Label variant="draft" /></td>
+            <td :class="local.tdResult">В обработке</td>
+            <td>{{ formatDate(app.createdAt) }}</td>
+            <td>
+              <Button
+                :variant="app.isPublished ? 'presend' : 'edit'"
+                :label="!app.isPublished ? 'Редактировать' : 'Отправить'"
+                :isSend="app.status === 'draft'"
+                :onClick="() => handleButtonClick(app)"
+              />
+              <!--  :onClick="() => app.status === 'draft' && sendApplication(app.id)" -->
+            </td>
+          </tr>
+        </client-only>
+      </template>
     </tbody>
   </table>
 </template>
@@ -58,6 +41,34 @@
 <script setup lang="ts">
 import Label from "~/models/UI/Labels/label.vue";
 import Button from "~/models/UI/Buttons/Button.vue";
+import type { Application } from "../../../../../types/api";
+
+const { data: applications, pending } = await useFetch<Application[]>(
+  "/api/table-data",
+  { default: () => [] }
+);
+
+const handleButtonClick = (app: Application) => {
+  if (!app.isPublished) {
+    navigateTo(`/edit?id=${app.id}`);
+  } else {
+    //  отправка заявки
+    // sendApplication
+    console.log("отправка заявки", app.id);
+  }
+};
+
+// const sendApplication = (app_id: number) => {
+//   console.log(app_id);
+// };
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
 </script>
 
 <style
