@@ -4,6 +4,7 @@ export interface Application {
   status: ApplicationStatus;
   createdAt: string;
   isPublished: boolean;
+  productsID: number[];
 }
 
 export type ApplicationStatus = "draft";

@@ -48,7 +48,8 @@ const inputRef = ref<HTMLInputElement | null>(null);
 const isInvalid = ref(false); // чек на незаполненность
 
 const displayValue = computed(() => {
-  if (!props.modelValue && props.modelValue !== 0) return "";
+  if (!props.modelValue && props.modelValue !== 0 && props.modelValue !== "0")
+    return "";
   return String(props.modelValue);
 });
 ///
@@ -61,29 +62,14 @@ const validateInput = (value: string) => {
   if (value === "") return { isValid: true, value: "" };
 
   const decimalRegex = /^\d*\.?\d{0,2}$/;
-
-  if (props.type === "count") {
-    const integerRegex = /^\d+$/;
-    if (integerRegex.test(value)) {
-      return { isValid: true, value };
-    }
-
-    const hasDecimal = value.includes(".");
-    return { isValid: !hasDecimal && decimalRegex.test(value), value };
-  }
-
-  if (props.type === "price") {
-    return { isValid: decimalRegex.test(value), value };
-  }
-
-  return { isValid: false, value };
+  return { isValid: decimalRegex.test(value), value };
 };
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   let inputValue = target.value;
 
-  inputValue = inputValue.replace(/[^\d.]/g, ""); // прогон на фильтр цифр и точек
+  inputValue = inputValue.replace(/[^\d.]/g, "");
 
   const dotCount = (inputValue.match(/\./g) || []).length; // минус лишние точки
   if (dotCount > 1) {
@@ -112,7 +98,15 @@ const handleInput = (event: Event) => {
 };
 
 const handleBlur = () => {
-  const validation = validateInput(displayValue.value); // чек на расфокус
+  const value = displayValue.value;
+
+  // Проверка на дробь для count при сохранении
+  if (props.type === "count" && value.includes(".")) {
+    isInvalid.value = true;
+    return;
+  }
+
+  const validation = validateInput(value); // чек на расфокус
   isInvalid.value = !validation.isValid;
 };
 

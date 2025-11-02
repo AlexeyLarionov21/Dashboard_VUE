@@ -40,7 +40,7 @@
         tabindex="0"
       >
         <span :class="$style['option-content']">
-          {{ item }}
+          {{ item.name }}
           <svg
             v-if="item.id === selectedItem"
             :class="$style.checkmark"

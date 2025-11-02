@@ -50,6 +50,14 @@ const { data: applications, pending } = await useFetch<Application[]>(
 
 const handleButtonClick = (app: Application) => {
   if (!app.isPublished) {
+    app.id;
+    if (!localStorage.getItem(`application_${app.id}`)) {
+      localStorage.setItem(
+        "currentAppProducts",
+        JSON.stringify(app.productsID)
+      );
+      console.log("Данные заявки сохранены");
+    }
     navigateTo(`/edit?id=${app.id}`);
   } else {
     //  отправка заявки

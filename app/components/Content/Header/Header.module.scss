@@ -5,11 +5,37 @@
 }
 
 .container {
-  height: 40px;
+  height: 36px;
   display: flex;
   align-items: center;
 }
 
 .label {
   margin: 0;
+}
+
+.buttonLeftContainer {
+  display: flex;
+  height: 31px;
+  align-items: center;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 12px;
+
+  &:hover .icon path {
+    fill: rgb(255, 129, 27) !important;
+    transition: 0.2s;
+  }
 }

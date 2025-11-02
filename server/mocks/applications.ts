@@ -5,6 +5,7 @@ export const mockApplications = [
     status: "draft",
     createdAt: "2025-11-01T10:00:00Z",
     isPublished: false,
+    productsID: [1, 2, 3, 4],
   },
   {
     id: 2,
@@ -12,6 +13,7 @@ export const mockApplications = [
     status: "draft",
     createdAt: "2025-11-02T12:00:00Z",
     isPublished: false,
+    productsID: [1, 3, 4],
   },
   {
     id: 3,
@@ -19,6 +21,7 @@ export const mockApplications = [
     status: "draft",
     createdAt: "2025-11-03T15:00:00Z",
     isPublished: false,
+    productsID: [1, 2],
   },
   {
     id: 4,
@@ -26,6 +29,7 @@ export const mockApplications = [
     status: "draft",
     createdAt: "2025-11-04T21:00:00Z",
     isPublished: true,
+    productsID: [1, 4],
   },
   {
     id: 5,
@@ -33,6 +37,7 @@ export const mockApplications = [
     status: "sent",
     createdAt: "2025-11-04T21:00:00Z",
     isPublished: false,
+    productsID: [2, 3, 4],
   },
   {
     id: 6,
@@ -40,5 +45,6 @@ export const mockApplications = [
     status: "sent",
     createdAt: "2025-11-04T21:00:00Z",
     isPublished: false,
+    productsID: [2, 4],
   },
 ];
