@@ -2,6 +2,7 @@
 import viteSvgLoader from "vite-svg-loader";
 
 export default defineNuxtConfig({
+  ssr: false,
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["@/assets/css/style.scss"],
@@ -9,6 +10,7 @@ export default defineNuxtConfig({
     plugins: [viteSvgLoader()],
   },
   app: {
+    baseURL: "/Dashboard_VUE/",
     head: {
       link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },

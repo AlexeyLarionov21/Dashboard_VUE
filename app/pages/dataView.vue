@@ -22,6 +22,7 @@ import type { Product } from "~~/types/product";
 import { validateProducts, type ValidationError } from "~~/types/validation";
 import { usePresendStorage } from "~/composables/usePresendStorage";
 import type { PresendApplication } from "~~/types/presend";
+import type { Application } from "~~/types/api";
 
 interface Props {
   id: string;
@@ -36,50 +37,82 @@ const tableProducts = ref<Product[]>([]);
 
 const { updatePresendStorage } = usePresendStorage();
 
-onMounted(async () => {
+const loadData = async (): Promise<void> => {
   if (typeof window !== "undefined") {
     const stored = localStorage.getItem(`application_${props.id}`);
     if (stored) {
-      tableProducts.value = JSON.parse(stored);
-      return;
+      try {
+        const parsed: Product[] = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          tableProducts.value = parsed;
+          return;
+        }
+      } catch (error) {
+        console.error("Error parsing stored data:", error);
+      }
     }
   }
 
-  const application = applicationStore.getCurrentApplication();
+  let application: Application | null =
+    applicationStore.getCurrentApplication();
   const productsID = application?.productsID || [];
+
   if (productsID.length === 0) {
     tableProducts.value = [];
     return;
   }
 
-  const { data: products } = await useFetch("/api/products", {
-    key: `products-${props.id}`,
-    default: () => [],
-  });
+  try {
+    let productsData: Product[] = [];
 
-  const filteredProducts = products.value
-    .filter((product) => productsID.includes(product.id))
-    .map((product) => ({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      count: product.count,
-      color: product.color,
-    }));
+    try {
+      const { data: products } = await useFetch<Product[]>("/api/products", {
+        key: `products-${props.id}`,
+        default: () => [],
+        server: false,
+      });
+      productsData = products.value || [];
+    } catch (apiError) {
+      console.log("API failed, trying static JSON...", apiError);
 
-  tableProducts.value = filteredProducts;
+      const config = useRuntimeConfig();
+      const staticProducts = await $fetch<Product[]>(
+        `${config.public.baseURL || ""}/api/products.json`
+      );
+      productsData = staticProducts;
+    }
 
-  if (typeof window !== "undefined") {
-    localStorage.setItem(
-      `application_${props.id}`,
-      JSON.stringify(filteredProducts)
-    );
+    const filteredProducts = productsData
+      .filter((product) => productsID.includes(product.id))
+      .map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        count: product.count,
+        color: product.color,
+      }));
+
+    tableProducts.value = filteredProducts;
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        `application_${props.id}`,
+        JSON.stringify(filteredProducts)
+      );
+    }
+  } catch (error) {
+    console.error("All data loading methods failed:", error);
+    tableProducts.value = [];
   }
 
   applicationStore.clearCurrentApplication();
+};
+
+onMounted(() => {
+  loadData();
 });
 
-// кнопка
+// кнопка сохранения
 const handleSave = (): void => {
   const validationResult = validateProducts(tableProducts.value);
   validationErrors.value = validationResult.errors;
@@ -106,7 +139,9 @@ const handleSave = (): void => {
 
     try {
       localStorage.removeItem(`application_${props.id}`);
-    } catch {}
+    } catch (error) {
+      console.error("Error removing localStorage item:", error);
+    }
 
     router.push("/");
   }
