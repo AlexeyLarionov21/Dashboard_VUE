@@ -1,1 +1,0 @@
-import{_ as s,c as t,o as a,a as o,r as c}from"./yOBcruEM.js";const r={},l={class:"app-shell"},n={class:"app-layout app-layout--empty"};function p(e,_){return a(),t("div",l,[o("div",n,[c(e.$slots,"default")])])}const f=s(r,[["render",p]]);export{f as default};

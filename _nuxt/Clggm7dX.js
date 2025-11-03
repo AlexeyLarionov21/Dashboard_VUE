@@ -1,1 +1,0 @@
-import t from"./DO9ky71M.js";import{g as r,j as a,k as s,l as n,o as i,m as c}from"./yOBcruEM.js";import"./mdYnEB4F.js";import"./CodHl1kJ.js";const k=r({__name:"edit",setup(m){const e=a(),o=s(()=>e.query.id);return(p,u)=>(i(),n(t,{id:c(o)},null,8,["id"]))}});export{k as default};

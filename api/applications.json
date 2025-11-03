@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Заявка 1",
+    "status": "draft",
+    "createdAt": "2025-11-01T10:00:00Z",
+    "isPublished": false,
+    "productsID": [1, 2, 3, 4]
+  },
+  {
+    "id": 2,
+    "name": "Заявка 2",
+    "status": "draft",
+    "createdAt": "2025-11-02T12:00:00Z",
+    "isPublished": false,
+    "productsID": [1, 3, 4]
+  },
+  {
+    "id": 3,
+    "name": "Заявка 3",
+    "status": "draft",
+    "createdAt": "2025-11-03T15:00:00Z",
+    "isPublished": false,
+    "productsID": [1, 2]
+  },
+  {
+    "id": 4,
+    "name": "Заявка 4",
+    "status": "draft",
+    "createdAt": "2025-11-04T21:00:00Z",
+    "isPublished": false,
+    "productsID": [1, 4]
+  },
+  {
+    "id": 5,
+    "name": "Заявка 5",
+    "status": "sent",
+    "createdAt": "2025-11-04T21:00:00Z",
+    "isPublished": true,
+    "productsID": [2, 3, 4]
+  },
+  {
+    "id": 6,
+    "name": "Заявка 6",
+    "status": "sent",
+    "createdAt": "2025-11-04T21:00:00Z",
+    "isPublished": true,
+    "productsID": [2, 4]
+  },
+  {
+    "id": 7,
+    "name": "Заявка 7",
+    "status": "draft",
+    "createdAt": "2025-11-04T21:00:00Z",
+    "isPublished": false,
+    "productsID": [2, 3, 4, 1]
+  },
+  {
+    "id": 8,
+    "name": "Заявка 8",
+    "status": "draft",
+    "createdAt": "2025-10-03T21:00:00Z",
+    "isPublished": false,
+    "productsID": [2]
+  },
+  {
+    "id": 9,
+    "name": "Заявка 9",
+    "status": "draft",
+    "createdAt": "2025-11-06T21:00:00Z",
+    "isPublished": false,
+    "productsID": [1, 3, 4]
+  }
+]
