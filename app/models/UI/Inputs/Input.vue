@@ -1,5 +1,10 @@
 <template>
-  <div :class="[$style.customInputWrapper, isInvalid ? $style.invalid : '']">
+  <div
+    :class="[
+      $style.customInputWrapper,
+      props.externalInvalid ? $style.invalid : '',
+    ]"
+  >
     <input
       ref="inputRef"
       type="text"
@@ -7,7 +12,6 @@
       :value="displayValue"
       :placeholder="placeholder"
       @input="handleInput"
-      @blur="handleBlur"
     />
     <button
       v-if="displayValue"
@@ -28,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, nextTick } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -40,12 +44,15 @@ const props = defineProps({
     validator: (value: string) => ["count", "price"].includes(value),
     default: "count",
   },
+  externalInvalid: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
 
 const inputRef = ref<HTMLInputElement | null>(null);
-const isInvalid = ref(false); // чек на незаполненность
 
 const displayValue = computed(() => {
   if (!props.modelValue && props.modelValue !== 0 && props.modelValue !== "0")
@@ -58,37 +65,28 @@ const placeholder = computed(() => {
 });
 ///
 
-const validateInput = (value: string) => {
-  if (value === "") return { isValid: true, value: "" };
-
-  const decimalRegex = /^\d*\.?\d{0,2}$/;
-  return { isValid: decimalRegex.test(value), value };
-};
-
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   let inputValue = target.value;
 
   inputValue = inputValue.replace(/[^\d.]/g, "");
 
-  const dotCount = (inputValue.match(/\./g) || []).length; // минус лишние точки
+  const dotCount = (inputValue.match(/\./g) || []).length;
   if (dotCount > 1) {
     const firstDotIndex = inputValue.indexOf(".");
     inputValue =
       inputValue.substring(0, firstDotIndex + 1) +
       inputValue.substring(firstDotIndex + 1).replace(/\./g, "");
   }
-  //// фильтр на 2 символа после запятьтой
+  // Ограничение на 2 символа после точки для price
   if (inputValue.includes(".")) {
     const parts = inputValue.split(".");
     if (parts[1] && parts[1].length > 2) {
       inputValue = parts[0] + "." + parts[1].substring(0, 2);
     }
   }
-  ///
-  const validation = validateInput(inputValue);
+
   emit("update:modelValue", inputValue);
-  isInvalid.value = !validation.isValid;
 
   nextTick(() => {
     if (inputRef.value) {
@@ -97,36 +95,14 @@ const handleInput = (event: Event) => {
   });
 };
 
-const handleBlur = () => {
-  const value = displayValue.value;
-
-  // Проверка на дробь для count при сохранении
-  if (props.type === "count" && value.includes(".")) {
-    isInvalid.value = true;
-    return;
-  }
-
-  const validation = validateInput(value); // чек на расфокус
-  isInvalid.value = !validation.isValid;
-};
-
 const clearInput = () => {
   emit("update:modelValue", "");
-  isInvalid.value = false;
   nextTick(() => {
     if (inputRef.value) {
       inputRef.value.focus();
     }
   });
 };
-
-watch(
-  () => props.modelValue,
-  (newItem) => {
-    const validation = validateInput(String(newItem || ""));
-    isInvalid.value = !validation.isValid;
-  }
-);
 </script>
 
 <style module lang="scss" src="./Input.module.scss" />

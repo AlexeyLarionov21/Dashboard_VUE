@@ -17,7 +17,7 @@
       </tr>
       <template v-else>
         <client-only>
-          <tr v-for="app in applications" :key="app.id">
+          <tr v-for="app in combinedApps" :key="app.id">
             <td>{{ app.id }}</td>
             <td><Label variant="draft" /></td>
             <td :class="local.tdResult">В обработке</td>
@@ -26,7 +26,6 @@
               <Button
                 :variant="app.isPublished ? 'presend' : 'edit'"
                 :label="!app.isPublished ? 'Редактировать' : 'Отправить'"
-                :isSend="app.status === 'draft'"
                 :onClick="() => handleButtonClick(app)"
               />
               <!--  :onClick="() => app.status === 'draft' && sendApplication(app.id)" -->
@@ -42,33 +41,68 @@
 import Label from "~/models/UI/Labels/label.vue";
 import Button from "~/models/UI/Buttons/Button.vue";
 import type { Application } from "../../../../../types/api";
+import { useApplicationStore } from "@/composables/useApplication";
+import { usePresendStorage } from "@/composables/usePresendStorage";
 
-const { data: applications, pending } = await useFetch<Application[]>(
-  "/api/table-data",
-  { default: () => [] }
-);
+const { getPresendApplications, removeFromPresend } = usePresendStorage();
 
-const handleButtonClick = (app: Application) => {
-  if (!app.isPublished) {
-    app.id;
-    if (!localStorage.getItem(`application_${app.id}`)) {
-      localStorage.setItem(
-        "currentAppProducts",
-        JSON.stringify(app.productsID)
-      );
-      console.log("Данные заявки сохранены");
+const router = useRouter();
+const applicationStore = useApplicationStore();
+
+const {
+  data: applications,
+  pending,
+  refresh,
+} = await useFetch<Application[]>("/api/table-data", { default: () => [] });
+
+const presendApps = ref(getPresendApplications());
+
+const combinedApps = computed(() => {
+  return applications.value.map((app) => {
+    const presendApp = presendApps.value[app.id];
+    if (presendApp) {
+      return {
+        ...app,
+        isPublished: true,
+      };
     }
-    navigateTo(`/edit?id=${app.id}`);
+    return app;
+  });
+});
+
+const handleButtonClick = async (app: Application): Promise<void> => {
+  if (!app.isPublished) {
+    applicationStore.setCurrentApplication(app);
+    await nextTick();
+    await router.push(`/edit?id=${app.id}`);
   } else {
     //  отправка заявки
-    // sendApplication
+    await sendApplication(app);
     console.log("отправка заявки", app.id);
   }
 };
 
-// const sendApplication = (app_id: number) => {
-//   console.log(app_id);
-// };
+const sendApplication = async (app: Application): Promise<void> => {
+  try {
+    const response = await $fetch("/api/send", {
+      method: "POST",
+    });
+
+    removeFromPresend(app.id);
+
+    presendApps.value = getPresendApplications();
+
+    alert("Заявка отправлена");
+
+    // удалить строку из таблицы
+    applications.value = (applications.value || []).filter(
+      (app_filter) => app_filter.id !== app.id
+    );
+  } catch (error) {
+    alert("ошибка");
+    console.error("ошибка отправки", error);
+  }
+};
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("en-US", {

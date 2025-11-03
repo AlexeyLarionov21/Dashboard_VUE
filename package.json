@@ -1,10 +1,12 @@
 {
   "name": "ticketdashboard",
+  "homepage": "https://AlexeyLarionov21.github.io/Dashboard_VUE/",
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
+    "build": "npm run generate",
     "dev": "nuxt dev",
+    "deploy": "gh-pages -d dist",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -16,6 +18,7 @@
   },
   "devDependencies": {
     "@nuxtjs/google-fonts": "^3.2.0",
+    "gh-pages": "^6.3.0",
     "sass-embedded": "^1.93.2",
     "vite-svg-loader": "^5.1.0"
   }

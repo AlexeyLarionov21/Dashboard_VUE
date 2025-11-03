@@ -1,29 +1,57 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { dataColor } from "~~/types/colors";
 import Dropdown from "~/models/UI/Dropdowns/Dropdown.vue";
 import Input from "~/models/UI/Inputs/Input.vue";
 import type { Product } from "~~/types/product";
+import type { ValidationError } from "~~/types/validation";
 
 interface Props {
   products: Product[];
+  validationErrors?: ValidationError[];
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  validationErrors: () => [],
+});
+
 const emit = defineEmits<{
   "update:products": [products: Product[]];
 }>();
 
-const updateCount = (productId: number, value: string) => {
-  // Проверка на дробь для count - если есть точка, не сохраняем
-  if (value.includes(".")) {
-    return;
-  }
-  
-  const updated = props.products.map((product) =>
-    product.id === productId
-      ? { ...product, count: value === "" ? null : parseInt(value) || 0 }
-      : product
+const countRawValues = ref<Record<number, string>>({});
+
+//чек на ошибки
+const isFieldInvalid = (
+  productId: number,
+  field: "count" | "price" | "color"
+) => {
+  return props.validationErrors.some(
+    (error) => error.productId === productId && error.field === field
   );
+};
+//////////
+
+const updateCount = (productId: number, value: string) => {
+  if (value === "" || value === ".") {
+    delete countRawValues.value[productId];
+  } else {
+    countRawValues.value[productId] = value;
+  }
+
+  const updated = props.products.map((product) => {
+    if (product.id === productId) {
+      if (value === "" || value === ".") {
+        return { ...product, count: null };
+      }
+      // если точка, сейв как нан
+      if (value.includes(".")) {
+        return { ...product, count: NaN };
+      }
+      return { ...product, count: parseInt(value) || 0 };
+    }
+    return product;
+  });
   emit("update:products", updated);
 };
 
@@ -60,12 +88,15 @@ const updateColor = (productId: number, colorId: string) => {
         <td>
           <Input
             :modelValue="
-              product.count === null || product.count === 0
-                ? ''
-                : product.count.toString()
+              countRawValues[product.id] !== undefined
+                ? countRawValues[product.id]
+                : product.count === null || product.count === 0 || isNaN(product.count as number)
+                  ? ''
+                  : product.count.toString()
             "
             v-on:update:model-value="(value) => updateCount(product.id, value)"
             type="count"
+            :externalInvalid="isFieldInvalid(product.id, 'count')"
           />
         </td>
         <td>
@@ -77,6 +108,7 @@ const updateColor = (productId: number, colorId: string) => {
             "
             v-on:update:model-value="(value) => updatePrice(product.id, value)"
             type="price"
+            :externalInvalid="isFieldInvalid(product.id, 'price')"
           />
         </td>
         <td>
@@ -85,6 +117,7 @@ const updateColor = (productId: number, colorId: string) => {
               :items="dataColor"
               :currentItem="product.color"
               v-on:change-item="(colorId: string) => updateColor(product.id, colorId)"
+              :externalInvalid="isFieldInvalid(product.id, 'color')"
             />
           </client-only>
         </td>

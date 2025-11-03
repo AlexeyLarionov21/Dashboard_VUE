@@ -5,7 +5,7 @@
         <button
           :class="$style.backButton"
           aria-label="Come back to home"
-          @click="$router.push('/')"
+          @click="goBack"
         >
           <IconBack :class="$style.icon" />
         </button>
@@ -22,4 +22,9 @@ import { useNav } from "@/composables/useNav";
 import IconBack from "@/assets/icons/arrow_left.svg";
 
 const { currentTitle } = useNav();
+
+const goBack = () => {
+  const router = useRouter();
+  router.back();
+};
 </script>

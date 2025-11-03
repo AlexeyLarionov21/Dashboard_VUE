@@ -80,8 +80,8 @@
   }
 }
 .error {
-  border-color: #ff0000 !important;
-  box-shadow: 0 0 0 1px #ff0000;
+  border: #ff0000 1px solid;
+  outline: none;
 }
 
 .is-selected {

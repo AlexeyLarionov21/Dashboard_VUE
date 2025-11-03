@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.wrap" v-click-outside="closeDropdown">
     <button
-      :class="$style.dropdown"
+      :class="[$style.dropdown, props.externalInvalid ? $style.error : '']"
       @click="toggleDropdown"
       @keydown.esc="closeDropdown"
       aria-haspopup="listbox"
@@ -70,10 +70,12 @@ import type { Color } from "~~/types/colors";
 interface Props {
   items: Color[];
   currentItem?: string;
+  externalInvalid?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   currentItem: "",
+  externalInvalid: false,
 });
 
 const isOpen = ref(false);
