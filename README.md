@@ -1,75 +1,35 @@
-# Nuxt Minimal Starter
+# Tickets Dashboard
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Приложение для управления заявками и товарами
 
-## Setup
+---
 
-Make sure to install dependencies:
+## Основные особенности
 
-```bash
-# npm
-npm install
+1. Приложение написано на **Nuxt 4** и **TypeScript**.
+2. Используется **Composition API** и компонентный подход — каждый компонент изолирован и не содержит глобальных сайд-эффектов.
+3. Стили оформлены в **SCSS-модулях**.
+4. Логика, асинхронные операции и работа с API реализованы через **кастомные хуки**.
+5. Источник данных — **Nuxt Server API** (mock API с задержками).
+6. Для временного хранения данных используется **localStorage**.
+7. Интерфейс включает:
+   - таблицы заявок и товаров;
+   - формы редактирования с валидацией;
+   - левое навигационное меню, которое можно скрывать.
+8. После успешной отправки данных localStorage очищается.
+9. Используются асинхронные запросы.
+10. Без внешних UI-библиотек компонентов, стилей и валидации.
 
-# pnpm
-pnpm install
+---
 
-# yarn
-yarn install
+## Установка и запуск
 
-# bun
-bun install
-```
+### 1. Установка зависимостей
 
-## Development Server
+1. git clone https://github.com/AlexeyLarionov21/Dashboard_VUE.git
 
-Start the development server on `http://localhost:3000`:
+2. cd Dashboard_VUE
 
-```bash
-# npm
-npm run dev
+3. npm install
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+4. npm run dev
