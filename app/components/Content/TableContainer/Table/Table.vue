@@ -84,20 +84,48 @@ const handleButtonClick = async (app: Application): Promise<void> => {
 
 const sendApplication = async (app: Application): Promise<void> => {
   try {
-    const response = await $fetch("/api/send", {
-      method: "POST",
-    });
+    const presendApp = presendApps.value[app.id];
 
-    removeFromPresend(app.id);
+    if (!presendApp) {
+      return;
+    }
 
-    presendApps.value = getPresendApplications();
+    const requestBody = {
+      id: app.id,
+      products: presendApp.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        count: product.count,
+        color: product.color,
+      })),
+    };
 
-    alert("Заявка отправлена");
+    let response;
 
-    // удалить строку из таблицы
-    applications.value = (applications.value || []).filter(
-      (app_filter) => app_filter.id !== app.id
-    );
+    try {
+      response = await $fetch("/api/send", {
+        method: "POST",
+        body: requestBody,
+      });
+    } catch (error) {
+      alert("ошибка");
+      console.error("ошибка отправки", error);
+      return;
+    }
+
+    if (response.success) {
+      console.log("Заявка отправлена", response.message);
+      removeFromPresend(app.id);
+
+      presendApps.value = getPresendApplications();
+
+      alert("Заявка отправлена");
+
+      applications.value = (applications.value || []).filter(
+        (app_filter) => app_filter.id !== app.id
+      );
+    }
   } catch (error) {
     alert("ошибка");
     console.error("ошибка отправки", error);

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run generate",
     "dev": "nuxt dev",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d .output/public",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
